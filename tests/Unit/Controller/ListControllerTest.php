@@ -1,17 +1,17 @@
 <?php
 
-namespace OCA\NotesTutorial\Tests\Unit\Controller;
+namespace OCA\ShoppingList\Tests\Unit\Controller;
 
 use PHPUnit\Framework\TestCase;
 
 use OCP\AppFramework\Http;
 use OCP\IRequest;
 
-use OCA\NotesTutorial\Service\NoteNotFound;
-use OCA\NotesTutorial\Service\NoteService;
-use OCA\NotesTutorial\Controller\NoteController;
+use OCA\ShoppingList\Service\ListNotFound;
+use OCA\ShoppingList\Service\ListService;
+use OCA\ShoppingList\Controller\ListController;
 
-class NoteControllerTest extends TestCase {
+class ListControllerTest extends TestCase {
 	protected $controller;
 	protected $service;
 	protected $userId = 'john';
@@ -19,10 +19,10 @@ class NoteControllerTest extends TestCase {
 
 	public function setUp(): void {
 		$this->request = $this->getMockBuilder(IRequest::class)->getMock();
-		$this->service = $this->getMockBuilder(NoteService::class)
+		$this->service = $this->getMockBuilder(ListService::class)
 			->disableOriginalConstructor()
 			->getMock();
-		$this->controller = new NoteController($this->request, $this->service, $this->userId);
+		$this->controller = new ListController($this->request, $this->service, $this->userId);
 	}
 
 	public function testUpdate() {
@@ -45,7 +45,7 @@ class NoteControllerTest extends TestCase {
 		// test the correct status code if no note is found
 		$this->service->expects($this->once())
 			->method('update')
-			->will($this->throwException(new NoteNotFound()));
+			->will($this->throwException(new ListNotFound()));
 
 		$result = $this->controller->update(3, 'title', 'content');
 

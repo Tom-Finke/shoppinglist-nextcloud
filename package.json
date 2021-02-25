@@ -1,19 +1,17 @@
 {
-	"name": "notestutorial",
-	"description": "A simple Nextcloud app tutorial for building a notes app",
+	"name": "shoppinglist",
+	"description": "A Shopping list App for Nextcloud",
 	"version": "18.0.0",
-	"author": "Julius Härtl <jus@bitgrid.net",
-	"contributors": [
-		"John Molakvoæ <skjnldsv@protonmail.com>"
-	],
+	"author": "Tom Finke <tom.s.h.finke@gmail.com>",
+	"contributors": [],
 	"bugs": {
-		"url": "https://github.com/nextcloud/app-tutorial/issues"
+		"url": "https://github.com/Tom-Finke/shoppinglist-nextcloud/issues"
 	},
 	"repository": {
-		"url": "https://github.com/nextcloud/app-tutorial",
+		"url": "https://github.com/Tom-Finke/shoppinglist-nextcloud",
 		"type": "git"
 	},
-	"homepage": "https://github.com/nextcloud/app-tutorial",
+	"homepage": "https://github.com/Tom-Finke/shoppinglist-nextcloud",
 	"license": "agpl",
 	"private": true,
 	"scripts": {

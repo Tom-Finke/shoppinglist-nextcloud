@@ -1,12 +1,12 @@
 <?php
 
-namespace OCA\NotesTutorial\Db;
+namespace OCA\ShoppingList\Db;
 
 use JsonSerializable;
 
 use OCP\AppFramework\Db\Entity;
 
-class Note extends Entity implements JsonSerializable {
+class ShoppingListe extends Entity implements JsonSerializable {
 	protected $content;
 
 	public function jsonSerialize(): array {

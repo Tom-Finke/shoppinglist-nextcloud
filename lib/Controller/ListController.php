@@ -1,15 +1,15 @@
 <?php
 
-namespace OCA\NotesTutorial\Controller;
+namespace OCA\ShoppingList\Controller;
 
-use OCA\NotesTutorial\AppInfo\Application;
-use OCA\NotesTutorial\Service\NoteService;
+use OCA\ShoppingList\AppInfo\Application;
+use OCA\ShoppingList\Service\ListService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IRequest;
 
-class NoteController extends Controller {
-	/** @var NoteService */
+class ListController extends Controller {
+	/** @var ListService */
 	private $service;
 
 	/** @var string */
@@ -18,7 +18,7 @@ class NoteController extends Controller {
 	use Errors;
 
 	public function __construct(IRequest $request,
-								NoteService $service,
+								ListService $service,
 								$userId) {
 		parent::__construct(Application::APP_ID, $request);
 		$this->service = $service;
@@ -26,6 +26,8 @@ class NoteController extends Controller {
 	}
 
 	/**
+	 * @CORS
+	 * @NoCSRFRequired
 	 * @NoAdminRequired
 	 */
 	public function index(): DataResponse {

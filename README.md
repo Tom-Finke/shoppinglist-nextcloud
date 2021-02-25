@@ -5,15 +5,16 @@
 [![Lint GitHub Action](https://github.com/nextcloud/app-tutorial/workflows/Lint/badge.svg)](https://github.com/nextcloud/app-tutorial/actions?query=workflow%3ALint)
 
 This is the [tutorial app](https://docs.nextcloud.com/server/latest/developer_manual/app_development/tutorial.html) which shows how to develop a very simple notes app.
- 
-## Try it 
+
+## Try it
+
 To install it change into your Nextcloud's apps directory:
 
     cd nextcloud/apps
 
 Then run:
 
-    git clone https://github.com/nextcloud/app-tutorial.git notestutorial
+    git clone https://github.com/nextcloud/app-tutorial.git shoppinglist
 
 Then install the dependencies using:
 

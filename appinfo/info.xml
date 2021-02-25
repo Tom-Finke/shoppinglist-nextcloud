@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <info xmlns:xsi= "http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
-    <id>notestutorial</id>
-    <name>Notes Tutorial</name>
-    <summary>App for taking notes</summary>
-    <description><![CDATA[This is a tutorial app for taking notes to demonstrate the Nextcloud API]]></description>
-    <version>18.0.0</version>
+    <id>shoppinglist</id>
+    <name>Shopping List</name>
+    <summary>App for keeping shopping lists and sharing them with others </summary>
+    <description><![CDATA[This is a shopping list app based on the nextcloud notestutorial.]]></description>
+    <version>0.1</version>
     <licence>agpl</licence>
-    <author mail="dev@bernhard-posselt.com" >Bernhard Posselt</author>
-    <namespace>NotesTutorial</namespace>
+    <author mail="tom.s.h.finke@gmail.com" >Tom Finke</author>
+    <namespace>ShoppingList</namespace>
     <category>office</category>
     <bugs>https://github.com/nextcloud/app-tutorial</bugs>
     <dependencies>
@@ -16,8 +16,8 @@
     </dependencies>
     <navigations>
         <navigation>
-            <name>Notes Tutorial</name>
-            <route>notestutorial.page.index</route>
+            <name>Shopping List</name>
+            <route>shoppinglist.page.index</route>
         </navigation>
     </navigations>
 </info>

@@ -1,8 +1,8 @@
 <?php
 
-namespace OCA\NotesTutorial\Controller;
+namespace OCA\ShoppingList\Controller;
 
-use OCA\NotesTutorial\AppInfo\Application;
+use OCA\ShoppingList\AppInfo\Application;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IRequest;
@@ -20,7 +20,7 @@ class PageController extends Controller {
 	 * Render default template
 	 */
 	public function index() {
-		Util::addScript(Application::APP_ID, 'notestutorial-main');
+		Util::addScript(Application::APP_ID, 'shoppinglist-main');
 
 		return new TemplateResponse(Application::APP_ID, 'main');
 	}

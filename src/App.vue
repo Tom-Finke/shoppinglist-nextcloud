@@ -1,110 +1,118 @@
 <template>
-	<div id="content" class="app-notestutorial">
-		<AppNavigation>
+	<div id="content" class="app-shoppinglist">
+		hi
+		<!-- <AppNavigation>
 			<AppNavigationNew v-if="!loading"
-				:text="t('notestutorial', 'New note')"
+				:text="t('shoppinglist', 'New note')"
 				:disabled="false"
-				button-id="new-notestutorial-button"
+				button-id="new-shoppinglist-button"
 				button-class="icon-add"
 				@click="newNote" />
 			<ul>
 				<AppNavigationItem v-for="note in notes"
 					:key="note.id"
-					:title="note.title ? note.title : t('notestutorial', 'New note')"
+					:title="note.title ? note.title : t('shoppinglist', 'New note')"
 					:class="{active: currentNote && currentNote.id === note.id}"
 					@click="openNote(note)">
-					<template slot ="icon">
+					<template slot="icon">
 						<div class="container0">
-							<ColorPicker @input="saveNote(note)" v-model="note.color">
-								<font-awesome-icon   icon="circle" size="2x" :style="{color: note.color}"/>
+							<ColorPicker v-model="note.color" @input="saveNote(note)">
+								<font-awesome-icon icon="circle" size="2x" :style="{color: note.color}" />
 							</ColorPicker>
 						</div>
-						
 					</template>
 					<template slot="actions">
 						<ActionButton
 							icon="icon-delete"
 							@click="deleteNote(note)">
-							{{ t('notestutorial', 'Delete note') }}
+							{{ t('shoppinglist', 'Delete note') }}
 						</ActionButton>
 					</template>
 				</AppNavigationItem>
 			</ul>
 		</AppNavigation>
-		<AppContent >
-			
-			<div class="shopping_list_frame"  v-if="currentNote">
-					<div
-						class="title_div"
-						:style="{'background-color': 'color' in currentNote ? currentNote.color : 'white', height: '50px', 'text-align': 'center', 'display': 'inline-block', 'vertical-align': 'middle'}">
-						<input type="text" v-model="currentNote.title"  @change="saveNote()" class="title" :style="{'border': 'none', 'background-color': currentNote.color}">
-					</div >
-				
-					<input ref="title"
+		<AppContent>
+			<div v-if="currentNote" class="shopping_list_frame">
+				<div
+					class="title_div"
+					:style="{'background-color': 'color' in currentNote ? currentNote.color : 'white', height: '50px', 'text-align': 'center', 'display': 'inline-block', 'vertical-align': 'middle'}">
+					<input v-model="currentNote.title"
+						type="text"
+						class="title"
+						:style="{'border': 'none', 'background-color': currentNote.color}"
+						@change="saveNote()">
+				</div>
+
+				<input ref="title"
+					v-model="newItemText"
 					type="text"
 					:disabled="updating"
-					v-model="newItemText"
-					@input="suggestItem"
-					@keydown="$event.key=='Enter'? addNewItem(suggestedItems[0]) : null"
 					class="newItemInput"
-					:placeholder="t('notestutorial', 'Add an Item')">
-					<table>
-					<tr v-for="(item, index) in suggestedItems" :key="'suggested'+index"
-						>
+					:placeholder="t('shoppinglist', 'Add an Item')"
+					@input="suggestItem"
+					@keydown="$event.key=='Enter'? addNewItem(suggestedItems[0]) : null">
+				<table>
+					<tr v-for="(item, index) in suggestedItems"
+						:key="'suggested'+index">
 						<td>{{ item.name }}</td>
-						<td ><input  v-model="item.amount" :style="{color: 'gray', 'text-align': 'right', 'border': 'none'}"></td>
+						<td><input v-model="item.amount" :style="{color: 'gray', 'text-align': 'right', 'border': 'none'}"></td>
 						<td>
 							<span @click="addNewItem(item)">
-								<font-awesome-icon  icon="plus" />
+								<font-awesome-icon icon="plus" />
 							</span>
 						</td>
 					</tr>
-					<tr v-for="item in currentNote.items.filter(item => item.active == true)" 
+					<tr v-for="item in currentNote.items.filter(item => item.active == true)"
 						:key="item.id"
 						class="item-wrapper__item"
 						@contextmenu.prevent.stop="handleContextMenu($event, item)">
-						<td><input type="text" v-model="item.name"  @change="saveNote()" :style="{'border': 'none'}"></td>
-						<td ><input @change="saveNote()" v-model="item.amount" :style="{color: 'gray', 'text-align': 'right', 'border': 'none'}"></td>
+						<td>
+							<input v-model="item.name"
+								type="text"
+								:style="{'border': 'none'}"
+								@change="saveNote()">
+						</td>
+						<td><input v-model="item.amount" :style="{color: 'gray', 'text-align': 'right', 'border': 'none'}" @change="saveNote()"></td>
 						<td>
 							<span @click="checkboxChange(item, false)">
-								<font-awesome-icon  :icon="['far', 'square']" />
+								<font-awesome-icon :icon="['far', 'square']" />
 							</span>
 						</td>
 					</tr>
-					<tr class="spacer"><td class="spacer" colspan="3">{{ t('notestutorial', 'recent') }}</td></tr>
+					<tr class="spacer">
+						<td class="spacer" colspan="3">
+							{{ t('shoppinglist', 'recent') }}
+						</td>
+					</tr>
 
-					<tr v-for="item in currentNote.items.filter(item => item.active == false)"  
+					<tr v-for="item in currentNote.items.filter(item => item.active == false)"
 						:key="item.id"
 						class="item-wrapper__item"
 						@contextmenu.prevent.stop="handleContextMenu($event, item)">
 						<td colspan="2" :style="{color: 'gray', 'min-width':'200px'}">
-							<input type="text" v-model="item.name"  @change="saveNote()" :style="{color: 'gray', 'border': 'none'}">
+							<input v-model="item.name"
+								type="text"
+								:style="{color: 'gray', 'border': 'none'}"
+								@change="saveNote()">
 						</td>
 						<td>
 							<span @click="checkboxChange(item, true)">
-								<font-awesome-icon  icon="plus" :style="{'color': currentNote.color}"/>
+								<font-awesome-icon icon="plus" :style="{'color': currentNote.color}" />
 							</span>
 						</td>
 					</tr>
-					</table>
-				
-				
-
+				</table>
 			</div>
 			<div v-else id="emptycontent">
 				<div class="icon-file" />
-				<h2>{{ t('notestutorial', 'Open or create a list to get started') }}</h2>
+				<h2>{{ t('shoppinglist', 'Open or create a list to get started') }}</h2>
 			</div>
-			
-				
-
 		</AppContent>
 		<VueSimpleContextMenu
-				:elementId="'contextMenu'"
-				:ref="'vueSimpleContextMenu'"
-				:options="[{name: t('notestutorial', 'delete')}]"
-				@option-clicked="deleteItem($event)"
-				/>
+			:ref="'vueSimpleContextMenu'"
+			:element-id="'contextMenu'"
+			:options="[{name: t('shoppinglist', 'delete')}]"
+			@option-clicked="deleteItem($event)" /> -->
 	</div>
 </template>
 <script src="https://kit.fontawesome.com/c93704883a.js" crossorigin="anonymous"></script>
@@ -114,14 +122,12 @@ import AppContent from '@nextcloud/vue/dist/Components/AppContent'
 import AppNavigation from '@nextcloud/vue/dist/Components/AppNavigation'
 import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
 import AppNavigationNew from '@nextcloud/vue/dist/Components/AppNavigationNew'
-import ColorPicker from '@nextcloud/vue/dist/Components/ColorPicker'
+// import ColorPicker from '@nextcloud/vue/dist/Components/ColorPicker'
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import '@nextcloud/dialogs/styles/toast.scss'
 import { generateUrl } from '@nextcloud/router'
 import { showError, showSuccess } from '@nextcloud/dialogs'
 import axios from '@nextcloud/axios'
-
-
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faSpinner, faPlus, faCircle } from '@fortawesome/free-solid-svg-icons'
@@ -133,7 +139,6 @@ import 'vue-simple-context-menu/dist/vue-simple-context-menu.css'
 
 import VueSimpleContextMenu from 'vue-simple-context-menu'
 
-
 library.add(faSpinner, faPlus, faSquare, faCircle)
 export default {
 	name: 'App',
@@ -144,7 +149,7 @@ export default {
 		AppNavigationItem,
 		AppNavigationNew,
 		FontAwesomeIcon,
-		ColorPicker,
+		// ColorPicker,
 		Actions,
 		VueSimpleContextMenu
 	},
@@ -173,16 +178,21 @@ export default {
 	 * Fetch list of notes when the componenat is loaded
 	 */
 	async mounted() {
-		try {
-			const response = await axios.get(generateUrl('/apps/notestutorial/notes'))
-			this.notes = response.data
-			console.log(this.notes)
+		if(False){
+			try {
+				const response = await axios.get(generateUrl('/apps/shoppinglist/lists'))
+				this.notes = response.data
+				console.warn("received:")
+				console.log(this.notes)
 
-		} catch (e) {
-			console.error(e)
-			showError(t('notestutorial', 'Could not fetch notes'))
+			} catch (e) {
+				console.error(e)
+				showError(t('shoppinglist', 'Could not fetch notes'))
+			}
+			this.loading = false
+			console.log("What is going on")
 		}
-		this.loading = false
+		
 	},
 
 	methods: {
@@ -202,11 +212,8 @@ export default {
 				this.$forceUpdate()
 				this.saveNote()
 		},
-		log(text){
-			console.log(text)
-		},
 		handleContextMenu(event, item){
-        	this.$refs.vueSimpleContextMenu.showMenu(event, item)
+			this.$refs.vueSimpleContextMenu.showMenu(event, item)
 		},
 		suggestItem(){
 			if(this.newItemText && this.newItemText.trim() !== ''){
@@ -235,7 +242,7 @@ export default {
 			if(item && item.name && item.name.trim() !== ''){
 			item.active = true
 			item.createdDate = new Date().toISOString()
-			item.id = uuidv4() //New items get a uuid in order to identify them 
+			item.id = uuidv4() //New items get a uuid in order to identify them
 			this.suggestedItems = []
 			this.newItemText = null
 			this.currentNote.items.push(item)
@@ -247,10 +254,10 @@ export default {
 			try {
 				this.currentNote.items = this.currentNote.items.filter((item) => item.id != event.item.id)
 				this.saveNote()
-				showSuccess(t('notestutorial', 'Item deleted'))
+				showSuccess(t('shoppinglist', 'Item deleted'))
 			} catch (e) {
 				console.error(e)
-				showError(t('notestutorial', 'Could not create the note'))
+				showError(t('shoppinglist', 'Could not create the note'))
 			}
 		},
 		/**
@@ -270,11 +277,11 @@ export default {
 		 * has been persisted in the backend
 		 */
 		async newNote() {
-			
+
 			let note = {
 				id: uuidv4(),
 				author: '',
-				title: t('notestutorial', 'New note'),
+				title: t('shoppinglist', 'New note'),
 				color: '#0082c9',
 				items: [],
 				createdDate: new Date().toISOString()
@@ -283,12 +290,12 @@ export default {
 			this.updating = true
 			console.log(note)
 			try {
-				const response = await axios.post(generateUrl('/apps/notestutorial/notes'), {"list": note})
+				const response = await axios.post(generateUrl('/apps/shoppinglist/lists'), {"list": note})
 				this.notes.push(note)
 				this.openNote(note)
 			} catch (e) {
 				console.error(e)
-				showError(t('notestutorial', 'Could not create the note'))
+				showError(t('shoppinglist', 'Could not create the note'))
 			}
 			this.updating = false
 
@@ -300,54 +307,56 @@ export default {
 		async createNote(note) {
 			this.updating = true
 			try {
-				const response = await axios.post(generateUrl('/apps/notestutorial/notes'), note)
+				const response = await axios.post(generateUrl('/apps/shoppinglist/lists'), note)
 				const index = this.notes.findIndex((match) => match.id === this.currentNoteId)
 				this.$set(this.notes, index, response.data)
 				this.currentNoteId = response.data.id
 			} catch (e) {
 				console.error(e)
-				showError(t('notestutorial', 'Could not create the note'))
+				showError(t('shoppinglist', 'Could not create the note'))
 			}
 			this.updating = false
 		},
 		/**
 		 * Update an existing note on the server
+		 *
 		 * @param {Object} note Note object
 		 */
 		async updateNote(note) {
 			this.updating = true
 			console.log("updating:")
 			console.log(note)
-			axios.put(generateUrl(`/apps/notestutorial/notes/${note.id}`), {"list": note})
+			axios.put(generateUrl(`/apps/shoppinglist/lists/${note.id}`), {"list": note})
 			.then((res) => console.log(res))
 			.finally(()=>this.updating = false)
 			.catch(e => {
 				console.error(e)
-				showError(t('notestutorial', 'Could not update the note'))})
-			
+				showError(t('shoppinglist', 'Could not update the note'))})
+
 		},
 		/**
 		 * Delete a note, remove it from the frontend and show a hint
+		 *
 		 * @param {Object} note Note object
 		 */
 		deleteNote(note) {
 			console.log("delete")
 			console.log(note)
-			axios.delete(generateUrl(`/apps/notestutorial/notes/${note.id}`))
+			axios.delete(generateUrl(`/apps/shoppinglist/lists/${note.id}`))
 			.then((res) => {
 				console.log(res)
 				this.notes.splice(this.notes.indexOf(note), 1)
 				if (this.currentNote && this.currentNote.id === note.id) {
 					this.currentNote = null
 				}
-				showSuccess(t('notestutorial', 'Note deleted'))
+				showSuccess(t('shoppinglist', 'Note deleted'))
 			})
 			.catch((e)=>{
 				console.error(e)
-			showError(t('notestutorial', 'Could not delete the note'))
+			showError(t('shoppinglist', 'Could not delete the note'))
 
 			})
-				
+
 		},
 	},
 }
@@ -355,11 +364,17 @@ export default {
 <style scoped>
 	.app-content {
 		padding-top: 40px;
-		
+
 	}
+
 	.shopping_list_frame{
 		max-width: 400px;
+		width: 400px;
+		display: inline-block;
+		text-align: center;
+		vertical-align: middle;
 	}
+
 	#app-content > div {
 		width: 100%;
 		height: 100%;
@@ -377,11 +392,15 @@ export default {
 		flex-grow: 1;
 		width: 100%;
 	}
+
 	table {border-collapse: collapse;}
+
 	td    {padding-right: 6px;}
+
 	#contextMenu{
 		border: 1px;
 	}
+
 	.title {
 		font    : sans-serif;
 		font-size: 20px !important;
@@ -392,13 +411,16 @@ export default {
 		width   : 240px;
 		background: none;
 	}
+
 	.title_div{
 		width: 100%;
 	}
+
 	td.spacer{
 		padding-top: 20px;
 		padding-bottom: 10px;
 	}
+
 	.app-navigation-entry-link * {
 		vertical-align: middle;
 		text-align: center;

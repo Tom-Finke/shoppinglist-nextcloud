@@ -1,6 +1,6 @@
 <?php
 
-namespace OCA\NotesTutorial\Service;
+namespace OCA\ShoppingList\Service;
 
 use Exception;
 
@@ -13,17 +13,17 @@ use OCP\IL10N;
 use OCP\Files\File;
 use OCP\Files\Folder;
 
-use OCA\NotesTutorial\Db\Note;
-use OCA\NotesTutorial\Db\NoteMapper;
+use OCA\ShoppingList\Db\ShoppinhL;
+use OCA\ShoppingList\Db\ListMapper;
 
-class NoteService {
+class ListService {
 
-	/** @var NoteMapper */
+	/** @var ListMapper */
 	private $mapper;
     private $root;
     private $user_id;
 
-	public function __construct(?string $UserId, IRootFolder $root, NoteMapper $mapper) {
+	public function __construct(?string $UserId, IRootFolder $root, ListMapper $mapper) {
 		$this->user_id = $UserId;
         $this->root = $root;
 		$this->mapper = $mapper;
@@ -45,7 +45,7 @@ class NoteService {
 	private function handleException(Exception $e): void {
 		if ($e instanceof DoesNotExistException ||
 			$e instanceof MultipleObjectsReturnedException) {
-			throw new NoteNotFound($e->getMessage());
+			throw new ListNotFound($e->getMessage());
 		} else {
 			throw $e;
 		}
@@ -133,7 +133,7 @@ class NoteService {
     public function getUserFolderPath()
     {
         // $path = $this->config->getUserValue($this->user_id, 'shoppinglist', 'folder');
-		$path = "Einkaufslisten";
+		$path = "Shoppinglists";
         if (!$path) {
             $path = '/' . $this->il10n->t('Recipes');
         }

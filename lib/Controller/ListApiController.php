@@ -1,15 +1,15 @@
 <?php
 
-namespace OCA\NotesTutorial\Controller;
+namespace OCA\ShoppingList\Controller;
 
-use OCA\NotesTutorial\AppInfo\Application;
-use OCA\NotesTutorial\Service\NoteService;
+use OCA\ShoppingList\AppInfo\Application;
+use OCA\ShoppingList\Service\ListService;
 use OCP\AppFramework\ApiController;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IRequest;
 
-class NoteApiController extends ApiController {
-	/** @var NoteService */
+class ListApiController extends ApiController {
+	/** @var ListService */
 	private $service;
 
 	/** @var string */
@@ -18,7 +18,7 @@ class NoteApiController extends ApiController {
 	use Errors;
 
 	public function __construct(IRequest $request,
-								NoteService $service,
+								ListService $service,
 								$userId) {
 		parent::__construct(Application::APP_ID, $request);
 		$this->service = $service;
@@ -61,14 +61,10 @@ class NoteApiController extends ApiController {
 	 * @NoAdminRequired
 	 * 
 	 * @param int $id
-	 * @param array $note
+	 * @param array $list
 	 */
-	public function update(int $id, string $title,
-	string $content): DataResponse {
-		return $content;
-		// return $this->handleNotFound(function () use ($note) {
-		// 	return $this->service->update($note);
-		// });
+	public function update(array $list): DataResponse {
+		return new DataResponse($this->service->update($list));
 	}
 
 	/**
