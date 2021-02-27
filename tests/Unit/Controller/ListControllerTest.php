@@ -43,13 +43,18 @@ class ListControllerTest extends TestCase {
 
 
 	public function testUpdateNotFound() {
+		$list = ["id"=> 1, 
+		"author" => "john", 
+		"title" => "note", 
+		"color" => "#000000", 
+		"items" => []];
 		// test the correct status code if no note is found
 		$this->service->expects($this->once())
 			->method('update')
 			->will($this->throwException(new ListNotFound()));
 
-		$result = $this->controller->update(3, 'title', 'content');
+		$result = $this->controller->update($list);
 
-		$this->assertEquals(Http::STATUS_NOT_FOUND, $result->getStatus());
+		$this->assertEquals(['status'=> "fail"], $result);
 	}
 }
