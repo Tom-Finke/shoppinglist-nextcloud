@@ -26,8 +26,6 @@ class ListController extends Controller {
 	}
 
 	/**
-	 * @CORS
-	 * @NoCSRFRequired
 	 * @NoAdminRequired
 	 */
 	public function index(): DataResponse {

@@ -1,7 +1,7 @@
 <template>
 	<div id="content" class="app-shoppinglist">
 		hi
-		<!-- <AppNavigation>
+		<AppNavigation>
 			<AppNavigationNew v-if="!loading"
 				:text="t('shoppinglist', 'New note')"
 				:disabled="false"
@@ -112,7 +112,7 @@
 			:ref="'vueSimpleContextMenu'"
 			:element-id="'contextMenu'"
 			:options="[{name: t('shoppinglist', 'delete')}]"
-			@option-clicked="deleteItem($event)" /> -->
+			@option-clicked="deleteItem($event)" />
 	</div>
 </template>
 <script src="https://kit.fontawesome.com/c93704883a.js" crossorigin="anonymous"></script>
@@ -178,21 +178,18 @@ export default {
 	 * Fetch list of notes when the componenat is loaded
 	 */
 	async mounted() {
-		if(False){
-			try {
-				const response = await axios.get(generateUrl('/apps/shoppinglist/lists'))
-				this.notes = response.data
-				console.warn("received:")
-				console.log(this.notes)
+		try {
+			const response = await axios.get(generateUrl('/apps/shoppinglist/lists'))
+			this.notes = response.data
+			console.warn("received:")
+			console.log(this.notes)
 
-			} catch (e) {
-				console.error(e)
-				showError(t('shoppinglist', 'Could not fetch notes'))
-			}
-			this.loading = false
-			console.log("What is going on")
+		} catch (e) {
+			console.error(e)
+			showError(t('shoppinglist', 'Could not fetch notes'))
 		}
-		
+		this.loading = false
+		console.log("What is going on")
 	},
 
 	methods: {

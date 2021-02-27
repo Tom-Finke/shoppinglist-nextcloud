@@ -27055,39 +27055,34 @@ _fortawesome_fontawesome_svg_core__WEBPACK_IMPORTED_MODULE_10__["library"].add(_
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              if (!False) {
-                _context.next = 16;
-                break;
-              }
-
-              _context.prev = 1;
-              _context.next = 4;
+              _context.prev = 0;
+              _context.next = 3;
               return _nextcloud_axios__WEBPACK_IMPORTED_MODULE_9___default.a.get(Object(_nextcloud_router__WEBPACK_IMPORTED_MODULE_7__["generateUrl"])('/apps/shoppinglist/lists'));
 
-            case 4:
+            case 3:
               response = _context.sent;
               _this.notes = response.data;
               console.warn("received:");
               console.log(_this.notes);
-              _context.next = 14;
+              _context.next = 13;
               break;
 
-            case 10:
-              _context.prev = 10;
-              _context.t0 = _context["catch"](1);
+            case 9:
+              _context.prev = 9;
+              _context.t0 = _context["catch"](0);
               console.error(_context.t0);
               Object(_nextcloud_dialogs__WEBPACK_IMPORTED_MODULE_8__["showError"])(t('shoppinglist', 'Could not fetch notes'));
 
-            case 14:
+            case 13:
               _this.loading = false;
               console.log("What is going on");
 
-            case 16:
+            case 15:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[1, 10]]);
+      }, _callee, null, [[0, 9]]);
     }))();
   },
   methods: {
@@ -46661,7 +46656,475 @@ var render = function() {
   return _c(
     "div",
     { staticClass: "app-shoppinglist", attrs: { id: "content" } },
-    [_vm._v("\n\thi\n\t")]
+    [
+      _vm._v("\n\thi\n\t"),
+      _c(
+        "AppNavigation",
+        [
+          !_vm.loading
+            ? _c("AppNavigationNew", {
+                attrs: {
+                  text: _vm.t("shoppinglist", "New note"),
+                  disabled: false,
+                  "button-id": "new-shoppinglist-button",
+                  "button-class": "icon-add"
+                },
+                on: { click: _vm.newNote }
+              })
+            : _vm._e(),
+          _vm._v(" "),
+          _c(
+            "ul",
+            _vm._l(_vm.notes, function(note) {
+              return _c(
+                "AppNavigationItem",
+                {
+                  key: note.id,
+                  class: {
+                    active: _vm.currentNote && _vm.currentNote.id === note.id
+                  },
+                  attrs: {
+                    title: note.title
+                      ? note.title
+                      : _vm.t("shoppinglist", "New note")
+                  },
+                  on: {
+                    click: function($event) {
+                      return _vm.openNote(note)
+                    }
+                  }
+                },
+                [
+                  _c("template", { slot: "icon" }, [
+                    _c(
+                      "div",
+                      { staticClass: "container0" },
+                      [
+                        _c(
+                          "ColorPicker",
+                          {
+                            on: {
+                              input: function($event) {
+                                return _vm.saveNote(note)
+                              }
+                            },
+                            model: {
+                              value: note.color,
+                              callback: function($$v) {
+                                _vm.$set(note, "color", $$v)
+                              },
+                              expression: "note.color"
+                            }
+                          },
+                          [
+                            _c("font-awesome-icon", {
+                              style: { color: note.color },
+                              attrs: { icon: "circle", size: "2x" }
+                            })
+                          ],
+                          1
+                        )
+                      ],
+                      1
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "template",
+                    { slot: "actions" },
+                    [
+                      _c(
+                        "ActionButton",
+                        {
+                          attrs: { icon: "icon-delete" },
+                          on: {
+                            click: function($event) {
+                              return _vm.deleteNote(note)
+                            }
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\n\t\t\t\t\t\t" +
+                              _vm._s(_vm.t("shoppinglist", "Delete note")) +
+                              "\n\t\t\t\t\t"
+                          )
+                        ]
+                      )
+                    ],
+                    1
+                  )
+                ],
+                2
+              )
+            }),
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c("AppContent", [
+        _vm.currentNote
+          ? _c("div", { staticClass: "shopping_list_frame" }, [
+              _c(
+                "div",
+                {
+                  staticClass: "title_div",
+                  style: {
+                    "background-color":
+                      "color" in _vm.currentNote
+                        ? _vm.currentNote.color
+                        : "white",
+                    height: "50px",
+                    "text-align": "center",
+                    display: "inline-block",
+                    "vertical-align": "middle"
+                  }
+                },
+                [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.currentNote.title,
+                        expression: "currentNote.title"
+                      }
+                    ],
+                    staticClass: "title",
+                    style: {
+                      border: "none",
+                      "background-color": _vm.currentNote.color
+                    },
+                    attrs: { type: "text" },
+                    domProps: { value: _vm.currentNote.title },
+                    on: {
+                      change: function($event) {
+                        return _vm.saveNote()
+                      },
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.currentNote, "title", $event.target.value)
+                      }
+                    }
+                  })
+                ]
+              ),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.newItemText,
+                    expression: "newItemText"
+                  }
+                ],
+                ref: "title",
+                staticClass: "newItemInput",
+                attrs: {
+                  type: "text",
+                  disabled: _vm.updating,
+                  placeholder: _vm.t("shoppinglist", "Add an Item")
+                },
+                domProps: { value: _vm.newItemText },
+                on: {
+                  input: [
+                    function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.newItemText = $event.target.value
+                    },
+                    _vm.suggestItem
+                  ],
+                  keydown: function($event) {
+                    $event.key == "Enter"
+                      ? _vm.addNewItem(_vm.suggestedItems[0])
+                      : null
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c(
+                "table",
+                [
+                  _vm._l(_vm.suggestedItems, function(item, index) {
+                    return _c("tr", { key: "suggested" + index }, [
+                      _c("td", [_vm._v(_vm._s(item.name))]),
+                      _vm._v(" "),
+                      _c("td", [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: item.amount,
+                              expression: "item.amount"
+                            }
+                          ],
+                          style: {
+                            color: "gray",
+                            "text-align": "right",
+                            border: "none"
+                          },
+                          domProps: { value: item.amount },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(item, "amount", $event.target.value)
+                            }
+                          }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("td", [
+                        _c(
+                          "span",
+                          {
+                            on: {
+                              click: function($event) {
+                                return _vm.addNewItem(item)
+                              }
+                            }
+                          },
+                          [
+                            _c("font-awesome-icon", { attrs: { icon: "plus" } })
+                          ],
+                          1
+                        )
+                      ])
+                    ])
+                  }),
+                  _vm._v(" "),
+                  _vm._l(
+                    _vm.currentNote.items.filter(function(item) {
+                      return item.active == true
+                    }),
+                    function(item) {
+                      return _c(
+                        "tr",
+                        {
+                          key: item.id,
+                          staticClass: "item-wrapper__item",
+                          on: {
+                            contextmenu: function($event) {
+                              $event.preventDefault()
+                              $event.stopPropagation()
+                              return _vm.handleContextMenu($event, item)
+                            }
+                          }
+                        },
+                        [
+                          _c("td", [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: item.name,
+                                  expression: "item.name"
+                                }
+                              ],
+                              style: { border: "none" },
+                              attrs: { type: "text" },
+                              domProps: { value: item.name },
+                              on: {
+                                change: function($event) {
+                                  return _vm.saveNote()
+                                },
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(item, "name", $event.target.value)
+                                }
+                              }
+                            })
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: item.amount,
+                                  expression: "item.amount"
+                                }
+                              ],
+                              style: {
+                                color: "gray",
+                                "text-align": "right",
+                                border: "none"
+                              },
+                              domProps: { value: item.amount },
+                              on: {
+                                change: function($event) {
+                                  return _vm.saveNote()
+                                },
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(item, "amount", $event.target.value)
+                                }
+                              }
+                            })
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _c(
+                              "span",
+                              {
+                                on: {
+                                  click: function($event) {
+                                    return _vm.checkboxChange(item, false)
+                                  }
+                                }
+                              },
+                              [
+                                _c("font-awesome-icon", {
+                                  attrs: { icon: ["far", "square"] }
+                                })
+                              ],
+                              1
+                            )
+                          ])
+                        ]
+                      )
+                    }
+                  ),
+                  _vm._v(" "),
+                  _c("tr", { staticClass: "spacer" }, [
+                    _c(
+                      "td",
+                      { staticClass: "spacer", attrs: { colspan: "3" } },
+                      [
+                        _vm._v(
+                          "\n\t\t\t\t\t\t" +
+                            _vm._s(_vm.t("shoppinglist", "recent")) +
+                            "\n\t\t\t\t\t"
+                        )
+                      ]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _vm._l(
+                    _vm.currentNote.items.filter(function(item) {
+                      return item.active == false
+                    }),
+                    function(item) {
+                      return _c(
+                        "tr",
+                        {
+                          key: item.id,
+                          staticClass: "item-wrapper__item",
+                          on: {
+                            contextmenu: function($event) {
+                              $event.preventDefault()
+                              $event.stopPropagation()
+                              return _vm.handleContextMenu($event, item)
+                            }
+                          }
+                        },
+                        [
+                          _c(
+                            "td",
+                            {
+                              style: { color: "gray", "min-width": "200px" },
+                              attrs: { colspan: "2" }
+                            },
+                            [
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: item.name,
+                                    expression: "item.name"
+                                  }
+                                ],
+                                style: { color: "gray", border: "none" },
+                                attrs: { type: "text" },
+                                domProps: { value: item.name },
+                                on: {
+                                  change: function($event) {
+                                    return _vm.saveNote()
+                                  },
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(item, "name", $event.target.value)
+                                  }
+                                }
+                              })
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c("td", [
+                            _c(
+                              "span",
+                              {
+                                on: {
+                                  click: function($event) {
+                                    return _vm.checkboxChange(item, true)
+                                  }
+                                }
+                              },
+                              [
+                                _c("font-awesome-icon", {
+                                  style: { color: _vm.currentNote.color },
+                                  attrs: { icon: "plus" }
+                                })
+                              ],
+                              1
+                            )
+                          ])
+                        ]
+                      )
+                    }
+                  )
+                ],
+                2
+              )
+            ])
+          : _c("div", { attrs: { id: "emptycontent" } }, [
+              _c("div", { staticClass: "icon-file" }),
+              _vm._v(" "),
+              _c("h2", [
+                _vm._v(
+                  _vm._s(
+                    _vm.t(
+                      "shoppinglist",
+                      "Open or create a list to get started"
+                    )
+                  )
+                )
+              ])
+            ])
+      ]),
+      _vm._v(" "),
+      _c("VueSimpleContextMenu", {
+        ref: "vueSimpleContextMenu",
+        attrs: {
+          "element-id": "contextMenu",
+          options: [{ name: _vm.t("shoppinglist", "delete") }]
+        },
+        on: {
+          "option-clicked": function($event) {
+            return _vm.deleteItem($event)
+          }
+        }
+      })
+    ],
+    1
   )
 }
 var staticRenderFns = []
@@ -56157,4 +56620,4 @@ vue__WEBPACK_IMPORTED_MODULE_0__["default"].mixin({
 /***/ })
 
 /******/ });
-//# sourceMappingURL=shoppinglist-main.js.map?v=d12e643ff396d5c28f9d
+//# sourceMappingURL=shoppinglist-main.js.map?v=4af13b605d871b146c4b
