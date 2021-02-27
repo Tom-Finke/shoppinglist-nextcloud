@@ -89,6 +89,7 @@ class ListService {
 		try {
 			$file = $this->findFile($json["id"]);
 			$file->putContent(json_encode($json));
+			return ['status'=> "success"];
 		} catch (Exception $e) {
 			$this->handleException($e);
 			return ['status'=> "fail"];
@@ -96,8 +97,14 @@ class ListService {
 	}
 
 	public function delete($id) {
-		$file = $this->findFile($id);
-		$file->delete();
+		try{
+			$file = $this->findFile($id);
+			$file->delete();
+		} catch (Exception $e) {
+			$this->handleException($e);
+			return ['status'=> "fail"];
+		}
+
 	}
 
 	
