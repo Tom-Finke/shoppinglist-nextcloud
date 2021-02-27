@@ -1,6 +1,5 @@
 <template>
 	<div id="content" class="app-shoppinglist">
-		hi
 		<AppNavigation>
 			<AppNavigationNew v-if="!loading"
 				:text="t('shoppinglist', 'New note')"

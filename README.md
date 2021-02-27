@@ -1,12 +1,38 @@
-# Nextcloud App Tutorial
+# Nextcloud Shopping List App
 
-[![PHPUnit GitHub Action](https://github.com/nextcloud/app-tutorial/workflows/PHPUnit/badge.svg)](https://github.com/nextcloud/app-tutorial/actions?query=workflow%3APHPUnit)
-[![Node GitHub Action](https://github.com/nextcloud/app-tutorial/workflows/Node/badge.svg)](https://github.com/nextcloud/app-tutorial/actions?query=workflow%3ANode)
-[![Lint GitHub Action](https://github.com/nextcloud/app-tutorial/workflows/Lint/badge.svg)](https://github.com/nextcloud/app-tutorial/actions?query=workflow%3ALint)
+This is a simple Shopping List app for Nextcloud.
 
-This is the [tutorial app](https://docs.nextcloud.com/server/latest/developer_manual/app_development/tutorial.html) which shows how to develop a very simple notes app.
+It is based on the Nextcloud Notes [tutorial app](https://docs.nextcloud.com/server/latest/developer_manual/app_development/tutorial.html)
 
-## Try it
+# Features
+
+## Basic functionality
+
+I Implemented some Basic features
+You can:
+
+- Create, manage and delete multiple Shopping Lists
+- Change the Color of a list by clicking on the colored circle in front of its name
+
+- Add Items to a list. The quantity will be recognized automatically. The Logic is as follows:
+  - If the typed text includes a number followed a known unit (default is "g", "kg", "l" and "ml", non case sensitive), it will add this as the quantity
+  - You can manually edit quanitities. If you have manually added a custom unit (e.g. ounces), the app adds "ounces" to the known units. So when you type "2 ounces" in the future, the app will add this as your quantity
+- Check off items from the list. They will appear in the "recent" Tab
+- Delete items by right clicking
+
+## Sharing Shoppinglists
+
+Each Shopping list is stored in a JSON file in the "Shoppinglists" Folder.
+By sharing the file with another person, you can both access and edit the same list.
+
+WARNING: When 2 People make changes to the same list at the same time, on of them will overwrite all changes the other Person made. This will be fixed in the future.
+
+## Android
+
+There is no Android Client yet. I havent done any Android programming yet. Feel free to implement it.
+Ill probably look into it when I can spare some time.
+
+# Install
 
 To install it change into your Nextcloud's apps directory:
 
@@ -14,17 +40,50 @@ To install it change into your Nextcloud's apps directory:
 
 Then run:
 
-    git clone https://github.com/nextcloud/app-tutorial.git shoppinglist
+    git clone https://github.com/Tom-Finke/shoppinglist-nextcloud.git shoppinglist
 
 Then install the dependencies using:
 
     make composer
 
+# Contribute
+
+You are welcome to contribute to this project.
+I have a couple of things planned.
+If you have an Idea for a feature or a bug report, feel free to open an iusse
+
+## Get started
+
+This is my first Nextcloud App. I found that it's not trivial to understand how everything works wit Nextcloud Apps.
+If you have any questions, feel free to ask, but I can't promies that I'll be able to give you a sattisfying answer.
+
+It really helped me to get started with the Nextcloud [tutorial app](https://docs.nextcloud.com/server/latest/developer_manual/app_development/tutorial.html) and build my way up from there.
+So I can really recommend having a look at that.
+
+Also, for reading and saving JSON Files, I looked into the [Nextcloud Cookbook](https://github.com/nextcloud/cookbook.git)Project.
+
+## TODS
+
+- Ability to sort list entries into an arbitrary order
+- Better Sharing, maybe a sharing Icon for each list
+- Add categories. Every Item can have a category
+- Add support for other languages
+- Add Settings menu, for setting:
+  - The Lists Source Folder
+  - Default Color
+  - Maybe default List Name
+- Ability to rename lists
+- Create an Android Client
+
 ## Frontend development
 
-The app tutorial also shows the very basic implementation of an app frontend using [Vue.js](https://vuejs.org/). To build the frontend code after doing changes to its source in `src/` requires to have Node and npm installed.
+If you want to contribute to this app, you can get started by tinkering with the [Vue.js](https://vuejs.org/) Frontend. To build the frontend code after doing changes to its source in `src/` requires to have Node and npm installed.
 
 - 👩‍💻 Run `make dev-setup` to install the frontend dependencies
 - 🏗 To build the Javascript whenever you make changes, run `make build-js`
 
 To continuously run the build when editing source files you can make use of the `make watch-js` command.
+
+## Backend Development
+
+If you make changes to the Backend PHP code, no restart or `make` should be necessary. The changes will be reflected instantaneously

@@ -2,5 +2,14 @@
 *.iml
 /vendor/
 /build/
-node_modules/
 /.php_cs.cache
+
+# Built js package
+js/*
+
+### NPM ###
+
+# Node modules
+node_modules/
+# Package lock
+package-lock.json
