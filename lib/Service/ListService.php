@@ -13,7 +13,7 @@ use OCP\IL10N;
 use OCP\Files\File;
 use OCP\Files\Folder;
 
-use OCA\ShoppingList\Db\ShoppinhL;
+use OCA\ShoppingList\Db\ShoppingList;
 use OCA\ShoppingList\Db\ListMapper;
 
 class ListService {

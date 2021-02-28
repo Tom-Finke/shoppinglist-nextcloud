@@ -60,7 +60,6 @@ class ListApiController extends ApiController {
 	 * @NoCSRFRequired
 	 * @NoAdminRequired
 	 * 
-	 * @param int $id
 	 * @param array $list
 	 */
 	public function update(array $list): DataResponse {
