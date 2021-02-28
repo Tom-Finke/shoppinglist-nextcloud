@@ -11,7 +11,7 @@ It is based on the Nextcloud Notes [tutorial app](https://docs.nextcloud.com/ser
 I Implemented some Basic features
 You can:
 
-- Create, manage and delete multiple Shopping Lists
+- Create, rename and delete Shopping Lists
 - Change the Color of a list by clicking on the colored circle in front of its name
 
 - Add Items to a list. The quantity will be recognized automatically. The Logic is as follows:
@@ -36,15 +36,19 @@ Ill probably look into it when I can spare some time.
 
 To install it change into your Nextcloud's apps directory:
 
-    cd nextcloud/apps
+    `cd nextcloud/apps`
 
 Then run:
-
-    git clone https://github.com/Tom-Finke/shoppinglist-nextcloud.git shoppinglist
+    `git clone https://github.com/Tom-Finke/shoppinglist-nextcloud.git shoppinglist`
 
 Then install the dependencies using:
+    `make composer`
 
-    make composer
+Install JS Dependencies and build js from Vue
+    `npm install`
+    `make build-js`
+    
+Note: You might have to install some PHP Dependencies. Just lool at the Make output if it fails. For me it was php dom and php mbstring
 
 # Contribute
 
@@ -62,6 +66,8 @@ So I can really recommend having a look at that.
 
 Also, for reading and saving JSON Files, I looked into the [Nextcloud Cookbook](https://github.com/nextcloud/cookbook.git)Project.
 
+Through Cookbook, i stumbled upon the Nextcloud [Docker Debug Repo](https://github.com/christianlupus/nextcloud-docker-debug), which I can highly recommend. 
+
 ## TODS
 
 - Ability to sort list entries into an arbitrary order
@@ -72,8 +78,8 @@ Also, for reading and saving JSON Files, I looked into the [Nextcloud Cookbook](
   - The Lists Source Folder
   - Default Color
   - Maybe default List Name
-- Ability to rename lists
 - Create an Android Client
+- Filename in which a list is stored should be similar to the lists name (as stored in the json)
 
 ## Frontend development
 

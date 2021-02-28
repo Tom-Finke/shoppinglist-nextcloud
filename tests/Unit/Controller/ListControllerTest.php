@@ -26,29 +26,35 @@ class ListControllerTest extends TestCase {
 	}
 
 	public function testUpdate() {
-		$note = 'just check if this value is returned correctly';
+		$list = ["id"=> 1, 
+		"author" => "john", 
+		"title" => "note", 
+		"color" => "#000000", 
+		"items" => []];
 		$this->service->expects($this->once())
 			->method('update')
-			->with($this->equalTo(3),
-					$this->equalTo('title'),
-					$this->equalTo('content'),
-				   $this->equalTo($this->userId))
-			->will($this->returnValue($note));
+			->with($this->equalTo($list))
+			->will($this->returnValue(['status'=> "success"]));
 
-		$result = $this->controller->update(3, 'title', 'content');
+		$result = $this->controller->update($list);
 
-		$this->assertEquals($note, $result->getData());
+		$this->assertEquals(['status'=> "success"], $result);
 	}
 
 
 	public function testUpdateNotFound() {
+		$list = ["id"=> 1, 
+		"author" => "john", 
+		"title" => "note", 
+		"color" => "#000000", 
+		"items" => []];
 		// test the correct status code if no note is found
 		$this->service->expects($this->once())
 			->method('update')
 			->will($this->throwException(new ListNotFound()));
 
-		$result = $this->controller->update(3, 'title', 'content');
+		$result = $this->controller->update($list);
 
-		$this->assertEquals(Http::STATUS_NOT_FOUND, $result->getStatus());
+		$this->assertEquals(['status'=> "fail"], $result);
 	}
 }
