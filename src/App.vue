@@ -2,44 +2,44 @@
 	<div id="content" class="app-shoppinglist">
 		<AppNavigation>
 			<AppNavigationNew v-if="!loading"
-				:text="t('shoppinglist', 'New note')"
+				:text="t('shoppinglist', 'New list')"
 				:disabled="false"
 				button-id="new-shoppinglist-button"
 				button-class="icon-add"
-				@click="newNote" />
+				@click="newList" />
 			<ul>
-				<AppNavigationItem v-for="note in notes"
-					:key="note.id"
-					:title="note.title ? note.title : t('shoppinglist', 'New note')"
-					:class="{active: currentNote && currentNote.id === note.id}"
-					@click="openNote(note)">
+				<AppNavigationItem v-for="list in lists"
+					:key="list.id"
+					:title="list.title ? list.title : t('shoppinglist', 'New list')"
+					:class="{active: currentList && currentList.id === list.id}"
+					@click="openList(list)">
 					<template slot="icon">
 						<div class="container0">
-							<ColorPicker v-model="note.color" @input="saveNote(note)">
-								<font-awesome-icon icon="circle" size="2x" :style="{color: note.color}" />
+							<ColorPicker v-model="list.color" @input="saveList(list)">
+								<font-awesome-icon icon="circle" size="2x" :style="{color: list.color}" />
 							</ColorPicker>
 						</div>
 					</template>
 					<template slot="actions">
 						<ActionButton
 							icon="icon-delete"
-							@click="deleteNote(note)">
-							{{ t('shoppinglist', 'Delete note') }}
+							@click="deleteList(list)">
+							{{ t('shoppinglist', 'Delete list') }}
 						</ActionButton>
 					</template>
 				</AppNavigationItem>
 			</ul>
 		</AppNavigation>
 		<AppContent>
-			<div v-if="currentNote" class="shopping_list_frame">
+			<div v-if="currentList" class="shopping_list_frame">
 				<div
 					class="title_div"
-					:style="{'background-color': 'color' in currentNote ? currentNote.color : 'white', height: '50px', 'text-align': 'center', 'display': 'inline-block', 'vertical-align': 'middle'}">
-					<input v-model="currentNote.title"
+					:style="{'background-color': 'color' in currentList ? currentList.color : 'white', height: '50px', 'text-align': 'center', 'display': 'inline-block', 'vertical-align': 'middle'}">
+					<input v-model="currentList.title"
 						type="text"
 						class="title"
-						:style="{'border': 'none', 'background-color': currentNote.color}"
-						@change="saveNote()">
+						:style="{'border': 'none', 'background-color': currentList.color}"
+						@change="saveList()">
 				</div>
 
 				<input ref="title"
@@ -61,7 +61,7 @@
 							</span>
 						</td>
 					</tr>
-					<tr v-for="item in currentNote.items.filter(item => item.active == true)"
+					<tr v-for="item in currentList.items.filter(item => item.active == true)"
 						:key="item.id"
 						class="item-wrapper__item"
 						@contextmenu.prevent.stop="handleContextMenu($event, item)">
@@ -69,9 +69,9 @@
 							<input v-model="item.name"
 								type="text"
 								:style="{'border': 'none'}"
-								@change="saveNote()">
+								@change="saveList()">
 						</td>
-						<td><input v-model="item.amount" :style="{color: 'gray', 'text-align': 'right', 'border': 'none'}" @change="saveNote()"></td>
+						<td><input v-model="item.amount" :style="{color: 'gray', 'text-align': 'right', 'border': 'none'}" @change="saveList()"></td>
 						<td>
 							<span @click="checkboxChange(item, false)">
 								<font-awesome-icon :icon="['far', 'square']" />
@@ -84,7 +84,7 @@
 						</td>
 					</tr>
 
-					<tr v-for="item in currentNote.items.filter(item => item.active == false)"
+					<tr v-for="item in currentList.items.filter(item => item.active == false)"
 						:key="item.id"
 						class="item-wrapper__item"
 						@contextmenu.prevent.stop="handleContextMenu($event, item)">
@@ -92,11 +92,11 @@
 							<input v-model="item.name"
 								type="text"
 								:style="{color: 'gray', 'border': 'none'}"
-								@change="saveNote()">
+								@change="saveList()">
 						</td>
 						<td>
 							<span @click="checkboxChange(item, true)">
-								<font-awesome-icon icon="plus" :style="{'color': currentNote.color}" />
+								<font-awesome-icon icon="plus" :style="{'color': currentList.color}" />
 							</span>
 						</td>
 					</tr>
@@ -154,8 +154,8 @@ export default {
 	},
 	data() {
 		return {
-			notes: [],
-			currentNote: null,
+			lists: [],
+			currentList: null,
 			updating: false,
 			loading: true,
 			checked: [],
@@ -166,26 +166,26 @@ export default {
 	computed: {
 
 		/**
-		 * Returns true if a note is selected and its title is not empty
+		 * Returns true if a list is selected and its title is not empty
 		 * @returns {Boolean}
 		 */
 		savePossible() {
-			return this.currentNote && this.currentNote.title !== ''
+			return this.currentList && this.currentList.title !== ''
 		},
 	},
 	/**
-	 * Fetch list of notes when the componenat is loaded
+	 * Fetch list of lists when the componenat is loaded
 	 */
 	async mounted() {
 		try {
 			const response = await axios.get(generateUrl('/apps/shoppinglist/lists'))
-			this.notes = response.data
+			this.lists = response.data
 			console.warn("received:")
-			console.log(this.notes)
+			console.log(this.lists)
 
 		} catch (e) {
 			console.error(e)
-			showError(t('shoppinglist', 'Could not fetch notes'))
+			showError(t('shoppinglist', 'Could not fetch lists'))
 		}
 		this.loading = false
 		console.log("What is going on")
@@ -193,20 +193,20 @@ export default {
 
 	methods: {
 		/**
-		 * Create a new note and focus the note content field automatically
-		 * @param {Object} note Note object
+		 * Create a new list and focus the list content field automatically
+		 * @param {Object} list List object
 		 */
-		openNote(note) {
+		openList(list) {
 			if (this.updating) {
 				return
 			}
-			this.currentNote = note
+			this.currentList = list
 		},
 		checkboxChange(item, newState){
 				item.active = newState
 				item.editedDate = new Date().toISOString()
 				this.$forceUpdate()
-				this.saveNote()
+				this.saveList()
 		},
 		handleContextMenu(event, item){
 			this.$refs.vueSimpleContextMenu.showMenu(event, item)
@@ -216,7 +216,7 @@ export default {
 				let item = {}
 				let units = ["k?g", "m?l"] //these are the units supported by default
 				//When a user adds an item with a custom unit of measurement, it becomes part of the available units
-				for (let existingItem of this.currentNote.items){
+				for (let existingItem of this.currentList.items){
 					let unit = existingItem.amount.replace(new RegExp("[0-9]", "g"), "").trim()
 					units.push(unit)
 				}
@@ -226,7 +226,7 @@ export default {
 				item.amount= match ? match[0] : ""
 				item.name = this.newItemText.replace(item.amount, "")
 				this.suggestedItems = [item]
-				for (let existingItem of this.currentNote.items){
+				for (let existingItem of this.currentList.items){
 					if (existingItem.name.includes(this.newItemText)){
 						this.suggestedItems.push(Object.assign({}, existingItem))
 					}
@@ -241,115 +241,115 @@ export default {
 			item.id = uuidv4() //New items get a uuid in order to identify them
 			this.suggestedItems = []
 			this.newItemText = null
-			this.currentNote.items.push(item)
-			this.saveNote()
+			this.currentList.items.push(item)
+			this.saveList()
 
 			}
 		},
 		deleteItem(event){
 			try {
-				this.currentNote.items = this.currentNote.items.filter((item) => item.id != event.item.id)
-				this.saveNote()
+				this.currentList.items = this.currentList.items.filter((item) => item.id != event.item.id)
+				this.saveList()
 				showSuccess(t('shoppinglist', 'Item deleted'))
 			} catch (e) {
 				console.error(e)
-				showError(t('shoppinglist', 'Could not create the note'))
+				showError(t('shoppinglist', 'Could not create the list'))
 			}
 		},
 		/**
 		 * Action tiggered when clicking the save button
-		 * create a new note or save
+		 * create a new list or save
 		 */
-		saveNote(note=this.currentNote) {
-			if (note.id === -1) {
-				this.createNote(note)
+		saveList(list=this.currentList) {
+			if (list.id === -1) {
+				this.createList(list)
 			} else {
-				this.updateNote(note)
+				this.updateList(list)
 			}
 		},
 		/**
-		 * Create a new note and focus the note content field automatically
-		 * The note is not yet saved, therefore an id of -1 is used until it
+		 * Create a new list and focus the list content field automatically
+		 * The list is not yet saved, therefore an id of -1 is used until it
 		 * has been persisted in the backend
 		 */
-		async newNote() {
+		async newList() {
 
-			let note = {
+			let list = {
 				id: uuidv4(),
 				author: '',
-				title: t('shoppinglist', 'New note'),
+				title: t('shoppinglist', 'New list'),
 				color: '#0082c9',
 				items: [],
 				createdDate: new Date().toISOString()
 
 			}
 			this.updating = true
-			console.log(note)
+			console.log(list)
 			try {
-				const response = await axios.post(generateUrl('/apps/shoppinglist/lists'), {"list": note})
-				this.notes.push(note)
-				this.openNote(note)
+				const response = await axios.post(generateUrl('/apps/shoppinglist/lists'), {"list": list})
+				this.lists.push(list)
+				this.openList(list)
 			} catch (e) {
 				console.error(e)
-				showError(t('shoppinglist', 'Could not create the note'))
+				showError(t('shoppinglist', 'Could not create the list'))
 			}
 			this.updating = false
 
 		},
 		/**
-		 * Create a new note by sending the information to the server
-		 * @param {Object} note Note object
+		 * Create a new list by sending the information to the server
+		 * @param {Object} list List object
 		 */
-		async createNote(note) {
+		async createList(list) {
 			this.updating = true
 			try {
-				const response = await axios.post(generateUrl('/apps/shoppinglist/lists'), note)
-				const index = this.notes.findIndex((match) => match.id === this.currentNoteId)
-				this.$set(this.notes, index, response.data)
-				this.currentNoteId = response.data.id
+				const response = await axios.post(generateUrl('/apps/shoppinglist/lists'), list)
+				const index = this.lists.findIndex((match) => match.id === this.currentListId)
+				this.$set(this.lists, index, response.data)
+				this.currentListId = response.data.id
 			} catch (e) {
 				console.error(e)
-				showError(t('shoppinglist', 'Could not create the note'))
+				showError(t('shoppinglist', 'Could not create the list'))
 			}
 			this.updating = false
 		},
 		/**
-		 * Update an existing note on the server
+		 * Update an existing list on the server
 		 *
-		 * @param {Object} note Note object
+		 * @param {Object} list List object
 		 */
-		async updateNote(note) {
+		async updateList(list) {
 			this.updating = true
 			console.log("updating:")
-			console.log(note)
-			axios.put(generateUrl(`/apps/shoppinglist/lists/${note.id}`), {"list": note})
+			console.log(list)
+			axios.put(generateUrl(`/apps/shoppinglist/lists/${list.id}`), {"list": list})
 			.then((res) => console.log(res))
 			.finally(()=>this.updating = false)
 			.catch(e => {
 				console.error(e)
-				showError(t('shoppinglist', 'Could not update the note'))})
+				showError(t('shoppinglist', 'Could not update the list'))})
 
 		},
 		/**
-		 * Delete a note, remove it from the frontend and show a hint
+		 * Delete a list, remove it from the frontend and show a hint
 		 *
-		 * @param {Object} note Note object
+		 * @param {Object} list List object
 		 */
-		deleteNote(note) {
+		deleteList(list) {
 			console.log("delete")
-			console.log(note)
-			axios.delete(generateUrl(`/apps/shoppinglist/lists/${note.id}`))
+			console.log(list)
+			axios.delete(generateUrl(`/apps/shoppinglist/lists/${list.id}`))
 			.then((res) => {
 				console.log(res)
-				this.notes.splice(this.notes.indexOf(note), 1)
-				if (this.currentNote && this.currentNote.id === note.id) {
-					this.currentNote = null
+				this.lists.splice(this.lists.indexOf(list), 1)
+				if (this.currentList && this.currentList.id === list.id) {
+					this.currentList = null
 				}
-				showSuccess(t('shoppinglist', 'Note deleted'))
+				showSuccess(t('shoppinglist', 'List deleted'))
 			})
 			.catch((e)=>{
 				console.error(e)
-			showError(t('shoppinglist', 'Could not delete the note'))
+			showError(t('shoppinglist', 'Could not delete the list'))
 
 			})
 

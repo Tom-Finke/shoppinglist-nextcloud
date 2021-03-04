@@ -26,14 +26,14 @@ class ListService {
 
 	public function findAll(): array {
 		$user_folder = $this->getFolderForUser();
-		$recipes = [];
+		$lists = [];
 		foreach ($user_folder->getDirectoryListing() as $node) {
 			$fileinfo = pathinfo($node->getName());
 			if ($fileinfo['extension'] == "json") {
-				$recipes[] = $this->loadRecipe($node);
+				$lists[] = $this->loadList($node);
 			}
 		}
-		return $recipes;
+		return $lists;
 	}
 
 	private function handleException(Exception $e): void {
@@ -49,26 +49,26 @@ class ListService {
 	public function findFile($id) {
 		$user_folder = $this->getFolderForUser();
 		foreach ($user_folder->getDirectoryListing() as $node) {
-			$recipe = $this->loadRecipe($node);
-			if ($recipe['id'] == $id) {
+			$list = $this->loadList($node);
+			if ($list['id'] == $id) {
 				return $node;
 			}
 		}
 		return null;
 	}
 	public function find($id) {
-		$recipes = $this->findAll();
-		return $recipes;
-		$ids = array_column($recipes, 'id');
+		$lists = $this->findAll();
+		return $lists;
+		$ids = array_column($lists, 'id');
 		$index = array_search($id, $ids);
-		return $recipes[$index];
+		return $lists[$index];
 	}
 
 	public function create($list) {
 		try {
 			$folder = $this->getFolderForUser();
 			$index = count($folder->getDirectoryListing()) + 1;
-			$file = $folder->newFile("new_recipe_" . $index . ".json");
+			$file = $folder->newFile("new_list_" . $index . ".json");
 			$file->putContent(json_encode($list));
 			return ["status" => "success"];
 		} catch (Exception $e) {
@@ -99,7 +99,7 @@ class ListService {
 	}
 
 	
-	public function loadRecipe($file) {
+	public function loadList($file) {
 		$json = json_decode($file->getContent(), true);
 		$update = false;
 		foreach ($json["items"] as &$item) {
@@ -131,7 +131,7 @@ class ListService {
 		// $path = $this->config->getUserValue($this->user_id, 'shoppinglist', 'folder');
 		$path = "Shoppinglists";
 		if (!$path) {
-			$path = '/' . $this->il10n->t('Recipes');
+			$path = '/' . $this->il10n->t('Lists');
 		}
 
 		return $path;
