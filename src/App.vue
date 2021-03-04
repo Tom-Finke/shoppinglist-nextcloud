@@ -121,7 +121,7 @@ import AppContent from '@nextcloud/vue/dist/Components/AppContent'
 import AppNavigation from '@nextcloud/vue/dist/Components/AppNavigation'
 import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
 import AppNavigationNew from '@nextcloud/vue/dist/Components/AppNavigationNew'
-// import ColorPicker from '@nextcloud/vue/dist/Components/ColorPicker'
+import ColorPicker from '@nextcloud/vue/dist/Components/ColorPicker'
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import '@nextcloud/dialogs/styles/toast.scss'
 import { generateUrl } from '@nextcloud/router'
@@ -148,7 +148,7 @@ export default {
 		AppNavigationItem,
 		AppNavigationNew,
 		FontAwesomeIcon,
-		// ColorPicker,
+		ColorPicker,
 		Actions,
 		VueSimpleContextMenu
 	},
