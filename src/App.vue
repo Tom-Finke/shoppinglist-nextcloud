@@ -238,6 +238,7 @@ export default {
 			if(item && item.name && item.name.trim() !== ''){
 			item.active = true
 			item.createdDate = new Date().toISOString()
+			item.editedDate = new Date().toISOString()
 			item.id = uuidv4() //New items get a uuid in order to identify them
 			this.suggestedItems = []
 			this.newItemText = null
@@ -322,6 +323,7 @@ export default {
 			this.updating = true
 			console.log("updating:")
 			console.log(list)
+			list["editedDate"] = new Date().toISOString()
 			axios.put(generateUrl(`/apps/shoppinglist/lists/${list.id}`), {"list": list})
 			.then((res) => console.log(res))
 			.finally(()=>this.updating = false)
