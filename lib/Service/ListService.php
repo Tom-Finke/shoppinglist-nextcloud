@@ -80,6 +80,25 @@ class ListService {
 	public function update($json) {
 		try {
 			$file = $this->findFile($json["id"]);
+			$file_content = $this->loadList($file);
+			$newItemIds = array_column($json["items"], 'id');
+			foreach ($file_content["items"] as &$item) {
+				if (in_array($item["id"], $newItemIds)) {
+					#If the Item exists both in the file and the new user data
+					$newItemIndex = array_search($item["id"], $newItemIds);
+					$filedate = new \DateTime($item["editedDate"]);
+					$jsondate = new \DateTime($json["items"][$newItemIndex]["editedDate"]);
+
+					if (($filedate) > ($jsondate)) {
+						# If the item is newer in the file, the item in the json has to be overwritten
+
+						$json["items"][$newItemIndex] = $item;
+					}
+				} else {
+					#If the item from the file is not yet in the data sent by the user, it has to be added
+					$json["items"][] = $item;
+				}
+			}
 			$file->putContent(json_encode($json));
 			return ['status' => "success"];
 		} catch (Exception $e) {
