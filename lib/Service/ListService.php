@@ -78,7 +78,9 @@ class ListService {
 	}
 
 	public function update($json) {
+		
 		try {
+
 			$file = $this->findFile($json["id"]);
 			$file_content = $this->loadList($file);
 			$newItemIds = array_column($json["items"], 'id');
