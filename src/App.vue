@@ -50,6 +50,7 @@
 					:placeholder="t('shoppinglist', 'Add an Item')"
 					@input="suggestItem"
 					@keydown="$event.key=='Enter'? addNewItem(suggestedItems[0]) : null">
+
 				<table>
 					<tr v-for="(item, index) in suggestedItems"
 						:key="'suggested'+index">
@@ -61,9 +62,15 @@
 							</span>
 						</td>
 					</tr>
-					<tr v-for="item in currentList.items.filter(item => item.active == true)"
+				</table>
+				<draggable
+					v-model="activeItems"
+					class="list-group"
+					tag="ul">
+					@change="updateList(currentList)"
+					<li v-for="item in activeItems"
 						:key="item.id"
-						class="item-wrapper__item"
+						:class="['item-wrapper__item', 'drag-el', 'list-group-item' ]"
 						@contextmenu.prevent.stop="handleContextMenu($event, item)">
 						<td>
 							<input v-model="item.name"
@@ -77,16 +84,13 @@
 								<font-awesome-icon :icon="['far', 'square']" />
 							</span>
 						</td>
-					</tr>
-					<tr class="spacer">
-						<td class="spacer" colspan="3">
-							{{ t('shoppinglist', 'recent') }}
-						</td>
-					</tr>
-
-					<tr v-for="item in currentList.items.filter(item => item.active == false)"
+					</li>
+				</draggable>
+				{{ t('shoppinglist', 'recent') }}
+				<table>
+					<tr v-for="item in inactiveItems"
 						:key="item.id"
-						class="item-wrapper__item"
+						:class="['item-wrapper__item', 'drag-el']"
 						@contextmenu.prevent.stop="handleContextMenu($event, item)">
 						<td colspan="2" :style="{color: 'gray', 'min-width':'200px'}">
 							<input v-model="item.name"
@@ -96,7 +100,7 @@
 						</td>
 						<td>
 							<span @click="checkboxChange(item, true)">
-								<font-awesome-icon icon="plus" :style="{'color': currentList.color}" />
+								<font-awesome-icon icon="plus" class="drag-icon" :style="{'color': currentList.color}" />
 							</span>
 						</td>
 					</tr>
@@ -129,16 +133,16 @@ import { showError, showSuccess } from '@nextcloud/dialogs'
 import axios from '@nextcloud/axios'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faSpinner, faPlus, faCircle } from '@fortawesome/free-solid-svg-icons'
+import { faSpinner, faPlus, faCircle, faBars } from '@fortawesome/free-solid-svg-icons'
 import { faSquare } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { v4 as uuidv4 } from 'uuid';
 
 import 'vue-simple-context-menu/dist/vue-simple-context-menu.css'
-
+import draggable from 'vuedraggable'
 import VueSimpleContextMenu from 'vue-simple-context-menu'
 
-library.add(faSpinner, faPlus, faSquare, faCircle)
+library.add(faSpinner, faPlus, faSquare, faCircle, faBars)
 export default {
 	name: 'App',
 	components: {
@@ -150,7 +154,8 @@ export default {
 		FontAwesomeIcon,
 		ColorPicker,
 		Actions,
-		VueSimpleContextMenu
+		draggable,
+		VueSimpleContextMenu,
 	},
 	data() {
 		return {
@@ -160,7 +165,9 @@ export default {
 			loading: true,
 			checked: [],
 			newItemText: "",
-			suggestedItems: []
+			activeItems: [],
+			inactiveItems: [],
+			suggestedItems: [],
 		}
 	},
 	computed: {
@@ -201,8 +208,14 @@ export default {
 				return
 			}
 			this.currentList = list
+			this.activeItems = this.currentList.items.filter(item => item.active == true)
+			this.inactiveItems = this.currentList.items.filter(item => item.active == false)
 		},
 		checkboxChange(item, newState){
+				let oldList = newState ? this.inactiveItems : this.activeItems
+				let newList = newState ? this.activeItems : this.inactiveItems
+				oldList.splice(oldList.indexOf(item), 1)
+				newList.push(item)
 				item.active = newState
 				item.editedDate = new Date().toISOString()
 				this.$forceUpdate()
@@ -234,7 +247,6 @@ export default {
 			}
 		},
 		addNewItem(item){
-			console.log(item)
 			if(item && item.name && item.name.trim() !== ''){
 			item.active = true
 			item.createdDate = new Date().toISOString()
@@ -242,14 +254,15 @@ export default {
 			item.id = uuidv4() //New items get a uuid in order to identify them
 			this.suggestedItems = []
 			this.newItemText = null
-			this.currentList.items.push(item)
+			this.activeItems.push(item)
 			this.saveList()
 
 			}
 		},
 		deleteItem(event){
 			try {
-				this.currentList.items = this.currentList.items.filter((item) => item.id != event.item.id)
+				let list = event.item.active ? this.activeItems : this.inactiveItems
+				list.splice(list.indexOf(event.item), 1)
 				this.saveList()
 				showSuccess(t('shoppinglist', 'Item deleted'))
 			} catch (e) {
@@ -321,15 +334,16 @@ export default {
 		 */
 		async updateList(list) {
 			this.updating = true
-			console.log("updating:")
-			console.log(list)
+			this.currentList.items = [...this.activeItems, ...this.inactiveItems]
 			list["editedDate"] = new Date().toISOString()
 			axios.put(generateUrl(`/apps/shoppinglist/lists/${list.id}`), {"list": list})
 			.then((res) => console.log(res))
 			.finally(()=>this.updating = false)
 			.catch(e => {
 				console.error(e)
-				showError(t('shoppinglist', 'Could not update the list'))})
+				showError(t('shoppinglist', 'Could not update the list'))
+				this.updating = false
+			})
 
 		},
 		/**
@@ -355,6 +369,19 @@ export default {
 
 			})
 
+		},
+		convertHexToRGBA (hexCode, opacity){
+			let hex = hexCode.replace('#', '')
+
+			if (hex.length === 3) {
+				hex = `${hex[0]}${hex[0]}${hex[1]}${hex[1]}${hex[2]}${hex[2]}`
+			}
+
+			const r = parseInt(hex.substring(0, 2), 16)
+			const g = parseInt(hex.substring(2, 4), 16)
+			const b = parseInt(hex.substring(4, 6), 16)
+
+			return `rgba(${r},${g},${b},${opacity / 100})`
 		},
 	},
 }
@@ -391,7 +418,10 @@ export default {
 		width: 100%;
 	}
 
-	table {border-collapse: collapse;}
+	table {
+		border-collapse: collapse;
+		width: 100%;
+	}
 
 	td    {padding-right: 6px;}
 
