@@ -50,7 +50,7 @@ class ListController extends Controller {
 
 	/**
 	 * @NoAdminRequired
-	 * 
+	 *
 	 * @param array $list
 	 */
 	public function update(array $list): DataResponse {
