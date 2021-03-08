@@ -39,7 +39,7 @@ class ListApiController extends ApiController {
 	 * @NoCSRFRequired
 	 * @NoAdminRequired
 	 */
-	public function show(int $id): DataResponse {
+	public function show(string $id): DataResponse {
 		return $this->handleNotFound(function () use ($id) {
 			return $this->service->find($id);
 		});
@@ -72,7 +72,7 @@ class ListApiController extends ApiController {
 	 * @NoCSRFRequired
 	 * @NoAdminRequired
 	 */
-	public function destroy(int $id): DataResponse {
+	public function destroy(string $id): DataResponse {
 		return $this->handleNotFound(function () use ($id) {
 			return $this->service->delete($id, $this->userId);
 		});

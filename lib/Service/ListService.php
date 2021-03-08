@@ -58,7 +58,6 @@ class ListService {
 	}
 	public function find($id) {
 		$lists = $this->findAll();
-		return $lists;
 		$ids = array_column($lists, 'id');
 		$index = array_search($id, $ids);
 		return $lists[$index];
