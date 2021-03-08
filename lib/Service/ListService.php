@@ -124,7 +124,7 @@ class ListService {
 		$list = json_decode($file->getContent(), true);
 		$list_copy = new \ArrayObject($list);
 		$list = $this->verifyList($list);
-		if(!$list === $list_copy){
+		if (!$list === $list_copy) {
 			$this->update($list);
 		}
 		return $list;
@@ -169,13 +169,12 @@ class ListService {
 	}
 
 	/**
-	 * @param array $list the list to be checked 
+	 * @param array $list the list to be checked
 	 * Takes a list. Performs a syntax check and returns a "fixed" list
-	 * 
+	 *
 	 */
-	public function verifyList($list){
-		
-		$list = $this->validOrDefault($list, array("title" => "New List", "author" => 'unknown'));
+	public function verifyList($list) {
+		$list = $this->validOrDefault($list, ["title" => "New List", "author" => 'unknown']);
 		$list["editedDate"] = $this->validISODate($list["editedDate"]);
 		$list["createdDate"] = $this->validISODate($list["createdDate"]);
 		$list["id"] = $this->validUUID($list["id"]);
@@ -187,77 +186,72 @@ class ListService {
 			$item["editedDate"] = $this->validISODate($item["editedDate"]);
 			$item["createdDate"] = $this->validISODate($item["createdDate"]);
 			$item["id"] = $this->validUUID($item["id"]);
-			$item = $this->validOrDefault($item, array("name" => "New Item", "author" => 'unknown'));
+			$item = $this->validOrDefault($item, ["name" => "New Item", "author" => 'unknown']);
 		}
 		return $list;
-		
 	}
 
 
 	/**
-	 * @param string $value the iso string to be checked 
-	 * Tries to Create a Date from the given string and return it as an ISO String. 
+	 * @param string $value the iso string to be checked
+	 * Tries to Create a Date from the given string and return it as an ISO String.
 	 * If not possible, it will return the current Datetime as an iso string
-	 * 
+	 *
 	 */
-	function validISODate($value)
-	{	
+	public function validISODate($value) {
 		try {
-			$dateTime =  new \DateTime($value);
+			$dateTime = new \DateTime($value);
 		} catch (Exception $e) {
 			$dateTime = new \DateTime();
 		}
 		return $dateTime->format(\DateTime::ISO8601);
-		
 	}
 	/**
-	 * @param string $value the uuid string to be checked 
-	 * Returns the value if it is a valid uuid v4. 
+	 * @param string $value the uuid string to be checked
+	 * Returns the value if it is a valid uuid v4.
 	 * Otherwise creates and returns a valid uuid v4
-	 * 
+	 *
 	 */
-	function validUUID($value){
-		try{
-			if(!preg_match('/^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/', $value)){
+	public function validUUID($value) {
+		try {
+			if (!preg_match('/^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/', $value)) {
 				return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex(random_bytes(16)), 4));
-			}else{
+			} else {
 				return $value;
 			}
-		}catch (Exception $e) {
+		} catch (Exception $e) {
 			return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex(random_bytes(16)), 4));
 		}
-
-
 	}
 
 	/**
-	 * @param string $value the uuid string to be checked 
-	 * Returns the value if it is a valid hex color string. 
+	 * @param string $value the uuid string to be checked
+	 * Returns the value if it is a valid hex color string.
 	 * Otherwise returns the default color
-	 * 
+	 *
 	 */
-	function validHexColor($value){
+	public function validHexColor($value) {
 		$defaultColor = "#6ea68f";
-		try{
-			if(!preg_match('/^#[0-9a-f]{6}$/', $value)){
+		try {
+			if (!preg_match('/^#[0-9a-f]{6}$/', $value)) {
 				return $defaultColor;
-			}else{
+			} else {
 				return $value;
 			}
-		}catch (Exception $e) {
+		} catch (Exception $e) {
 			return $defaultColor;
 		}
 	}
 
 	/**
-	 * @param array $array_to_check the uuid string to be checked 
+	 * @param array $array_to_check the uuid string to be checked
 	 * @param array $keys			the array of key and default-value pairs to check
 	 * For everry key in $keys checks wether the key already exists in the array_to_check
 	 * If not, it will set the default value for that key
-	 * 
+	 *
 	 */
-	function validOrDefault(array $array_to_check, array $keys){
-		foreach ($keys as $key => $default){
+	public function validOrDefault(array $array_to_check, array $keys) {
+		foreach ($keys as $key => $default) {
 			if (!array_key_exists($key, $array_to_check)) {
 				$array_to_check[$key] = $default;
 			}
