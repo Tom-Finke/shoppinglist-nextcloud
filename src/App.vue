@@ -66,8 +66,8 @@
 				<draggable
 					v-model="activeItems"
 					class="list-group"
-					tag="ul">
-					@change="updateList(currentList)"
+					tag="ul"
+					@change="updateList(currentList)">
 					<li v-for="item in activeItems"
 						:key="item.id"
 						:class="['item-wrapper__item', 'drag-el', 'list-group-item' ]"
