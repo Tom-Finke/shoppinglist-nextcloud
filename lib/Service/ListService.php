@@ -99,8 +99,13 @@ class ListService {
 					$list["items"][] = $item;
 				}
 			}
+			$list["items"] = array_filter(
+				$list["items"],
+				fn ($item, $key) => $item["status"] != "deleted",
+				ARRAY_FILTER_USE_BOTH
+			);
 			$list = $this->verifyList($list);
-			$file->putContent(json_encode($list));
+			$file->putContent(json_encode($list,JSON_PRETTY_PRINT));
 			return ['status' => "success"];
 		} catch (Exception $e) {
 			$this->handleException($e);
@@ -185,7 +190,7 @@ class ListService {
 			$item["editedDate"] = $this->validISODate($item["editedDate"]);
 			$item["createdDate"] = $this->validISODate($item["createdDate"]);
 			$item["id"] = $this->validUUID($item["id"]);
-			$item = $this->validOrDefault($item, ["name" => "New Item", "author" => 'unknown']);
+			$item = $this->validOrDefault($item, ["name" => "New Item", "author" => 'unknown', "status" => "active"]);
 		}
 		return $list;
 	}

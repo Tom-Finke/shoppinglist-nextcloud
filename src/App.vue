@@ -80,7 +80,7 @@
 						</td>
 						<td><input v-model="item.amount" :style="{color: 'gray', 'text-align': 'right', 'border': 'none'}" @change="saveList()"></td>
 						<td>
-							<span @click="checkboxChange(item, false)">
+							<span @click="checkboxChange(item, 'inactive')">
 								<font-awesome-icon :icon="['far', 'square']" />
 							</span>
 						</td>
@@ -99,7 +99,7 @@
 								@change="saveList()">
 						</td>
 						<td>
-							<span @click="checkboxChange(item, true)">
+							<span @click="checkboxChange(item, 'active')">
 								<font-awesome-icon icon="plus" class="drag-icon" :style="{'color': currentList.color}" />
 							</span>
 						</td>
@@ -167,6 +167,7 @@ export default {
 			newItemText: "",
 			activeItems: [],
 			inactiveItems: [],
+			deletedItems: [],
 			suggestedItems: [],
 		}
 	},
@@ -208,15 +209,16 @@ export default {
 				return
 			}
 			this.currentList = list
-			this.activeItems = this.currentList.items.filter(item => item.active == true)
-			this.inactiveItems = this.currentList.items.filter(item => item.active == false)
+			this.activeItems = this.currentList.items.filter(item => item.status == "active")
+			this.inactiveItems = this.currentList.items.filter(item => item.status == "inactive")
+			this.deletedItems = this.currentList.items.filter(item => item.status == "deleted")
 		},
 		checkboxChange(item, newState){
-				let oldList = newState ? this.inactiveItems : this.activeItems
-				let newList = newState ? this.activeItems : this.inactiveItems
+				let oldList = newState == "active" ? this.inactiveItems : this.activeItems
+				let newList = newState == "active" ? this.activeItems : this.inactiveItems
 				oldList.splice(oldList.indexOf(item), 1)
 				newList.push(item)
-				item.active = newState
+				item.status = newState
 				item.editedDate = new Date().toISOString()
 				this.$forceUpdate()
 				this.saveList()
@@ -248,7 +250,7 @@ export default {
 		},
 		addNewItem(item){
 			if(item && item.name && item.name.trim() !== ''){
-			item.active = true
+			item.status = "active"
 			item.createdDate = new Date().toISOString()
 			item.editedDate = new Date().toISOString()
 			item.id = uuidv4() //New items get a uuid in order to identify them
@@ -261,8 +263,10 @@ export default {
 		},
 		deleteItem(event){
 			try {
-				let list = event.item.active ? this.activeItems : this.inactiveItems
+				let list = event.item.status == "active" ? this.activeItems : this.inactiveItems
 				list.splice(list.indexOf(event.item), 1)
+				event.item.status = "deleted"
+				this.deletedItems.push(event.item)
 				this.saveList()
 				showSuccess(t('shoppinglist', 'Item deleted'))
 			} catch (e) {
@@ -334,7 +338,7 @@ export default {
 		 */
 		async updateList(list) {
 			this.updating = true
-			this.currentList.items = [...this.activeItems, ...this.inactiveItems]
+			this.currentList.items = [...this.activeItems, ...this.inactiveItems, ...this.deletedItems]
 			list["editedDate"] = new Date().toISOString()
 			axios.put(generateUrl(`/apps/shoppinglist/lists/${list.id}`), {"list": list})
 			.then((res) => console.log(res))
