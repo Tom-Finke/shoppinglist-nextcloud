@@ -101,7 +101,9 @@ class ListService {
 			}
 			$list["items"] = array_filter(
 				$list["items"],
-				fn ($item, $key) => $item["status"] != "deleted",
+				function ($item, $key) {
+					return $item["status"] != "deleted";
+				},
 				ARRAY_FILTER_USE_BOTH
 			);
 			$list = $this->verifyList($list);
