@@ -294,7 +294,6 @@ export default {
 
 			let list = {
 				id: uuidv4(),
-				author: '',
 				title: t('shoppinglist', 'New list'),
 				color: '#0082c9',
 				items: [],
