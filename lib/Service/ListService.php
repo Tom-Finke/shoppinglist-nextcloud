@@ -69,7 +69,7 @@ class ListService {
 			$index = count($folder->getDirectoryListing()) + 1;
 			$file = $folder->newFile("new_list_" . $index . ".json");
 			$list = $this->verifyList($list);
-			$file->putContent(json_encode($list));
+			$file->putContent(json_encode($list, JSON_PRETTY_PRINT));
 			return ["status" => "success"];
 		} catch (Exception $e) {
 			$this->handleException($e);
@@ -180,7 +180,7 @@ class ListService {
 	 *
 	 */
 	public function verifyList($list) {
-		$list = $this->validOrDefault($list, ["title" => "New List", "author" => 'unknown']);
+		$list = $this->validOrDefault($list, ["title" => "New List", "author" => $this->user_id]);
 		$list["editedDate"] = $this->validISODate($list["editedDate"]);
 		$list["createdDate"] = $this->validISODate($list["createdDate"]);
 		$list["id"] = $this->validUUID($list["id"]);
@@ -192,7 +192,7 @@ class ListService {
 			$item["editedDate"] = $this->validISODate($item["editedDate"]);
 			$item["createdDate"] = $this->validISODate($item["createdDate"]);
 			$item["id"] = $this->validUUID($item["id"]);
-			$item = $this->validOrDefault($item, ["name" => "New Item", "author" => 'unknown', "status" => "active"]);
+			$item = $this->validOrDefault($item, ["name" => "New Item", "author" => $this->user_id, "status" => "active"]);
 		}
 		return $list;
 	}
@@ -258,7 +258,7 @@ class ListService {
 	 */
 	public function validOrDefault(array $array_to_check, array $keys) {
 		foreach ($keys as $key => $default) {
-			if (!array_key_exists($key, $array_to_check)) {
+			if (empty($array_to_check[$key])) {
 				$array_to_check[$key] = $default;
 			}
 		}
