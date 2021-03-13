@@ -45,24 +45,26 @@
 				<input ref="title"
 					v-model="newItemText"
 					type="text"
-					:disabled="updating"
 					class="newItemInput"
 					:placeholder="t('shoppinglist', 'Add an Item')"
 					@input="suggestItem"
 					@keydown="$event.key=='Enter'? addNewItem(suggestedItems[0]) : null">
 
-				<table>
-					<tr v-for="(item, index) in suggestedItems"
-						:key="'suggested'+index">
-						<td>{{ item.name }}</td>
-						<td><input v-model="item.amount" :style="{color: 'gray', 'text-align': 'right', 'border': 'none'}"></td>
-						<td>
+				<ul class="suggested-items">
+					<li v-for="(item, index) in suggestedItems"
+						:key="'suggested'+index"
+						:style="{'border-color': currentList.color}">
+						<div class="item-title">
+							<span>{{ item.name }}</span>
+						</div>
+						<div :class="['right-icon']">
+							<input v-model="item.amount" class="item-amount">
 							<span @click="addNewItem(item)">
-								<font-awesome-icon icon="plus" />
+								<font-awesome-icon icon="plus" :style="{'color': currentList.color}" />
 							</span>
-						</td>
-					</tr>
-				</table>
+						</div>
+					</li>
+				</ul>
 				<draggable
 					v-model="activeItems"
 					class="list-group"
@@ -72,39 +74,39 @@
 						:key="item.id"
 						:class="['item-wrapper__item', 'drag-el', 'list-group-item' ]"
 						@contextmenu.prevent.stop="handleContextMenu($event, item)">
-						<td>
+						<div>
 							<input v-model="item.name"
 								type="text"
-								:style="{'border': 'none'}"
+								class="item-title"
 								@change="saveList()">
-						</td>
-						<td><input v-model="item.amount" :style="{color: 'gray', 'text-align': 'right', 'border': 'none'}" @change="saveList()"></td>
-						<td>
+						</div>
+						<div :class="['right-icon']">
+							<input v-model="item.amount" class="item-amount" @change="saveList()">
 							<span @click="checkboxChange(item, 'inactive')">
 								<font-awesome-icon :icon="['far', 'square']" />
 							</span>
-						</td>
+						</div>
 					</li>
 				</draggable>
 				{{ t('shoppinglist', 'recent') }}
-				<table>
-					<tr v-for="item in inactiveItems"
+				<ul>
+					<li v-for="item in inactiveItems"
 						:key="item.id"
 						:class="['item-wrapper__item', 'drag-el']"
 						@contextmenu.prevent.stop="handleContextMenu($event, item)">
-						<td colspan="2" :style="{color: 'gray', 'min-width':'200px'}">
+						<div>
 							<input v-model="item.name"
 								type="text"
-								:style="{color: 'gray', 'border': 'none'}"
+								:class="['item-title', 'inactive']"
 								@change="saveList()">
-						</td>
-						<td>
+						</div>
+						<div :class="['right-icon']">
 							<span @click="checkboxChange(item, 'active')">
 								<font-awesome-icon icon="plus" class="drag-icon" :style="{'color': currentList.color}" />
 							</span>
-						</td>
-					</tr>
-				</table>
+						</div>
+					</li>
+				</ul>
 			</div>
 			<div v-else id="emptycontent">
 				<div class="icon-file" />
@@ -227,7 +229,8 @@ export default {
 			this.$refs.vueSimpleContextMenu.showMenu(event, item)
 		},
 		suggestItem(){
-			if(this.newItemText && this.newItemText.trim() !== ''){
+			if(this.newItemText.trim()){
+			console.log(this.newItemText)
 				let item = {}
 				let units = ["k?g", "m?l"] //these are the units supported by default
 				//When a user adds an item with a custom unit of measurement, it becomes part of the available units
@@ -242,10 +245,14 @@ export default {
 				item.name = this.newItemText.replace(item.amount, "")
 				this.suggestedItems = [item]
 				for (let existingItem of this.currentList.items){
-					if (existingItem.name.includes(this.newItemText)){
+					if (existingItem.name.toLowerCase().includes(this.newItemText.toLowerCase())){
 						this.suggestedItems.push(Object.assign({}, existingItem))
 					}
 				}
+			}
+			else {
+				console.log("empty")
+				this.suggestedItems = []
 			}
 		},
 		addNewItem(item){
@@ -397,7 +404,6 @@ export default {
 
 	.shopping_list_frame{
 		max-width: 400px;
-		width: 400px;
 		display: inline-block;
 		text-align: center;
 		vertical-align: middle;
@@ -411,22 +417,6 @@ export default {
 		flex-direction: column;
 		flex-grow: 1;
 	}
-
-	input[type='text'] {
-		width: 80%;
-	}
-
-	textarea {
-		flex-grow: 1;
-		width: 100%;
-	}
-
-	table {
-		border-collapse: collapse;
-		width: 100%;
-	}
-
-	td    {padding-right: 6px;}
 
 	#contextMenu{
 		border: 1px;
@@ -447,13 +437,61 @@ export default {
 		width: 100%;
 	}
 
-	td.spacer{
-		padding-top: 20px;
-		padding-bottom: 10px;
-	}
-
 	.app-navigation-entry-link * {
 		vertical-align: middle;
 		text-align: center;
+	}
+
+	.newItemInput{
+		width: 80%;
+	}
+
+	.suggested-items{
+		width: 90%;
+	}
+
+	.newItemInput, .suggested-items{
+		display: inline-block;
+	}
+
+	.suggested-items li:last-child{
+		border-bottom: 1px solid;
+	}
+
+	ul {
+		width: 100%;
+	}
+
+	li {
+		width: 100%;
+		display: flex;
+		flex-wrap: wrap;
+	}
+
+	.item-title{
+		text-align: left;
+		border: none;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.item-title.inactive {
+		color: gray;
+	}
+
+	.item-amount {
+		color: gray;
+		text-align: right;
+		border: none;
+
+	}
+
+	.right-icon {
+		display: flex;
+		margin-right: 10px;
+		align-items: center;
+		margin-left: auto;
+		order: 2;
 	}
 </style>
