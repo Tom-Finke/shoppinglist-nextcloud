@@ -9,6 +9,7 @@ It is based on the Nextcloud Notes [tutorial app](https://docs.nextcloud.com/ser
 ## Basic functionality
 
 I Implemented some Basic features
+
 You can:
 
 - Create, rename and delete Shopping Lists
@@ -24,8 +25,6 @@ You can:
 
 Each Shopping list is stored in a JSON file in the "Shoppinglists" Folder.
 By sharing the file with another person, you can both access and edit the same list.
-
-WARNING: When 2 People make changes to the same list at the same time, on of them will overwrite all changes the other Person made. This will be fixed in the future.
 
 ## Android
 
