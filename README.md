@@ -39,6 +39,7 @@ To install it change into your Nextcloud's apps directory:
 
 Then run:
     `git clone https://github.com/Tom-Finke/shoppinglist-nextcloud.git shoppinglist`
+> The directory you clone the repository to has to be called "shoppinglist", or enabling the app won't work
 
 Then install the dependencies using:
     `make composer`
