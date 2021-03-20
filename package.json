@@ -24,7 +24,7 @@
 		"stylelint:fix": "stylelint css/*.css css/*.scss src/**/*.scss src/**/*.vue --fix"
 	},
 	"dependencies": {
-		"@fortawesome/fontawesome-svg-core": "^1.2.34",
+		"@fortawesome/fontawesome-svg-core": "^1.2.35",
 		"@fortawesome/free-brands-svg-icons": "^5.15.2",
 		"@fortawesome/free-regular-svg-icons": "^5.15.2",
 		"@fortawesome/free-solid-svg-icons": "^5.15.2",
