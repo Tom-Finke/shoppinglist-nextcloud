@@ -31,7 +31,7 @@
 		"@fortawesome/vue-fontawesome": "^2.0.2",
 		"@nextcloud/axios": "^1.6.0",
 		"@nextcloud/browserslist-config": "^2.1.0",
-		"@nextcloud/dialogs": "^3.1.1",
+		"@nextcloud/dialogs": "^3.1.2",
 		"@nextcloud/router": "^1.2.0",
 		"@nextcloud/vue": "^3.8.0",
 		"ssri": "^8.0.1",
