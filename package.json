@@ -36,7 +36,7 @@
 		"@nextcloud/vue": "^3.10.0",
 		"ssri": "^8.0.1",
 		"uuid": "^8.3.2",
-		"vue": "^2.6.12",
+		"vue": "^2.6.13",
 		"vue-simple-context-menu": "^3.4.1",
 		"vuedraggable": "^2.24.3"
 	},
@@ -74,7 +74,7 @@
 		"stylelint-webpack-plugin": "^2.1.1",
 		"url-loader": "^4.1.1",
 		"vue-loader": "^15.9.7",
-		"vue-template-compiler": "^2.6.12",
+		"vue-template-compiler": "^2.6.13",
 		"webpack": "^4.46.0",
 		"webpack-cli": "^3.3.12"
 	}
